@@ -16,8 +16,12 @@ function turn(elem){
     //     elem.classList.remove('photo_back');
     //     elem.classList.add('photo_front');
     // }
-    elem.classList.toggle('photo_back');
     var n = elem.id.split('_')[1];
+    if ( !elem.classList.contains('photo-center')){
+        return rsort(n);
+    }
+
+    elem.classList.toggle('photo_back');
     g('#nav_' + n).classList.toggle('i_back');
 }
 
@@ -35,7 +39,7 @@ function addPhoto(data){
                                 .replace('{{desc}}',data[s].desc);
         html.push(_html);
         navs.push('<span id="nav_'+s+'" onclick="turn(g(\'#photo_'+s+'\'))" class="i">\
-            <i class="icon-share-alt icon-large"></i></span>')
+            <i class="icon-reply icon-large"></i></span>')
     }
     html.push('<div class="nav">'+navs.join('')+'</div>')
     g('#wrap').innerHTML = html.join('');
@@ -49,7 +53,11 @@ function rsort(n){
     var photos =[]
     for(var s=0;s<_photos.length;s++){
         // _photos[s].className = _photos[s].className.replace(/\s*photo-center\s*/,'');
-        _photos[s].classList.remove('photo-center')
+        _photos[s].classList.remove('photo-center');
+        _photos[s].classList.remove('photo_back');
+        _photos[s].style.cssText = '';
+
+        _photos[s].style['transform'] = 'rotate(360deg) scale(1.3)'
         photos.push(_photos[s]);
     }
 
@@ -67,14 +75,14 @@ function rsort(n){
         photos_left[s].style.left = random(rangeXY.left.x)+'px';
         photos_left[s].style.top = random(rangeXY.left.y)+'px';
 
-        photos_left[s].style['transform'] = 'rotate('+random([-150,150])+'deg)';
+        photos_left[s].style['transform'] = 'rotate('+random([-150,150])+'deg) scale(1)';
 
     }
     for (s in photos_right){
         photos_right[s].style.left = random(rangeXY.right.x)+'px';
         photos_right[s].style.top = random(rangeXY.right.y)+'px';
 
-        photos_right[s].style['transform'] = 'rotate('+random([-150,150])+'deg)';
+        photos_right[s].style['transform'] = 'rotate('+random([-150,150])+'deg) scale(1)';
 
     }
     // 控制条选种样式添加
@@ -101,10 +109,10 @@ function range(){
         h: g('.photo')[0].clientHeight
     }
 
-    range.left.x = [0 - photo.w, wrap.w/2 - photo.w];
-    range.left.y = [0 - photo.h, wrap.h]
+    range.left.x = [0 , wrap.w/2 - photo.w];
+    range.left.y = [0 , wrap.h-photo.h]
 
-    range.right.x = [wrap.w/2 + photo.w/2,wrap.w];
+    range.right.x = [wrap.w/2 + photo.w/2,wrap.w-photo.w];
     range.right.y = range.left.y;
 
     range.wrap = wrap;

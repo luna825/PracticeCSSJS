@@ -26,6 +26,12 @@ body{
     position: absolute;
     z-index: 1;
     box-shadow: 0 0 1px rgba(0,0,0,0.01);
+
+    top:50%;
+    left:50%;
+    margin:-160px 0 0 -130px;
+
+    -webkit-transition: all .6s;
 }
 
 .photo .side{
@@ -101,7 +107,6 @@ body{
     width: 80%;
     height: 30px;
     line-height: 30px;
-    background-color: #fff;
     position: absolute;
     bottom: 20px;
     left:10%;
@@ -135,4 +140,12 @@ body{
 .nav .i_back{
     background-color: #555;
     -webkit-transform: rotateY(-180deg);
+}
+
+/*优化样式*/
+.photo-wrap{
+    -webkit-transform-origin: 0% 50%;
+}
+.photo_back .photo-wrap{
+    -webkit-transform: translate(260px,0px) rotateY(180deg);
 }
