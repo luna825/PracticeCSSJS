@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Special-gallery</title>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
     <style type="text/css">
         *{ padding:0; margin:0;}
         body{
@@ -112,6 +113,47 @@
             -webkit-transform: rotateY(180deg);
             transform: rotateY(180deg);
         }
+
+        /*nav控制样式*/
+        .nav{
+            width:80%;
+            height:30px;
+            line-height:30px;
+            position:absolute;
+            left:10%;
+            bottom:20px;
+            background-color:#fff;
+            z-index:999;
+            text-align:center;
+        }
+        /*普通样式*/
+        .nav .i{
+            display:inline-block;
+            width:30px;
+            height:30px;
+            cursor:pointer;
+            background-color:#aaa;
+            border-radius:50%;
+
+            -webkit-transform:scale(.48);
+            -webkit-transition:all .5s;
+        }
+        .nav .i i{
+            color:#fff;
+            opacity:0;
+        }
+        /*选中样式*/
+        .nav .i_currnt{
+            -webkit-transform:scale(.90);
+        }
+        .nav .i_currnt i{
+            opacity:1;
+        }
+        /*背面样式*/
+        .nav .i_back{
+            -webkit-transform: rotateY(-180deg);
+            background-color:#555;
+        }
     </style>
 </head>
 <body onselectstart="return false;">
@@ -147,6 +189,7 @@
     function addPhotos(data){
         var template = g('#wrap').innerHTML;
         var html = [];
+        var nav = []
 
         for (s in data){
             var _html = template
@@ -155,9 +198,13 @@
                             .replace('{{caption}}',data[s].caption)
                             .replace('{{desc}}',data[s].desc);
             html.push(_html);
+
+            nav.push('<span id="nav_'+s+'" class="i" onclick="turn(g(\'#photo_'+s+'\'))"><i class="icon-share-alt icon-large"></i></span>');
         }
+        html.push('<div class="nav">'+nav.join('')+'</div>')
         g('#wrap').innerHTML = html.join('');
         rsort(random([0,data.length-1]))
+
     }
     addPhotos(data);
 
@@ -215,7 +262,13 @@
             photos_right[s].style['transform'] = 'rotate('+random([-150,150])+'deg)';
         }
 
-        console.log(photos_right.length,photos_left.length);
+        var navs = g('.nav');
+        for (var s=0;s<navs.length;s++){
+            navs[s].classList.remove('i_currnt');
+            navs[s].classList.remove('i_back');
+        }
+
+        g('#nav_'+n).classList.add('i_currnt');
 
 
     }
@@ -223,10 +276,13 @@
     // 1.翻转控制
     function turn(elem){
         cls = elem.className;
+        var n = elem.id.split('_')[1];
         if (/photo_front/.test(cls)){
-            cls = cls.replace(/photo_front/,'photo_back'); 
+            cls = cls.replace(/photo_front/,'photo_back');
+            g('#nav_'+n).classList.add('i_back');
         }else{
-            cls = cls.replace(/photo_back/,'photo_front'); 
+            cls = cls.replace(/photo_back/,'photo_front');
+             g('#nav_'+n).classList.remove('i_back')  
         }
         return elem.className = cls;
     }
